@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import logo from './assets/fusion-logo.svg'
+import logo from './assets/fusion-logo.svg';
 
 const schema = z.object({
   nome: z.string().min(1, 'Nome é obrigatório'),
@@ -21,6 +21,16 @@ const cargos = [
   'DevOps Engineer', 'Engenheiro de Dados', 'QA Engineer', 'Scrum Master', 'Product Owner',
 ];
 
+// Tipo para o estado de erros
+type FormErrors = {
+  nome?: string;
+  email?: string;
+  telefone?: string;
+  cargo?: string;
+  linkedin?: string;
+  github?: string;
+};
+
 const App = () => {
   const [formData, setFormData] = useState({
     nome: '',
@@ -31,6 +41,7 @@ const App = () => {
     github: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({}); // Tipagem para o estado de erros
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -47,6 +58,9 @@ const App = () => {
     try {
       schema.parse(formData);
 
+      // Clear errors on successful validation
+      setErrors({});
+
       localStorage.setItem('membro', JSON.stringify(formData));
 
       toast.success('Cadastro realizado com sucesso!');
@@ -61,8 +75,17 @@ const App = () => {
         github: '',
       });
     } catch (error) {
-        console.log(error, "erro ao cadastrar");
+      if (error instanceof z.ZodError) {
+        const formErrors: FormErrors = {}; // Usando o tipo FormErrors
+        error.errors.forEach((err) => {
+          formErrors[err.path[0]] = err.message;
+        });
+        setErrors(formErrors);
         toast.error('Falha ao cadastrar. Verifique os dados informados.');
+      } else {
+        console.log(error, 'erro ao cadastrar');
+        toast.error('Falha ao cadastrar. Verifique os dados informados.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -70,8 +93,8 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-[#1e1f22f1] flex flex-col items-center justify-center p-4">
-        <ToastContainer position="top-right" autoClose={3000} />
-        <img className="w-[150px] mb-4" src={logo} alt="Logo da FrontEnd Fusion" />
+      <ToastContainer position="top-right" autoClose={3000} />
+      <img className="w-[150px] mb-4" src={logo} alt="Logo da FrontEnd Fusion" />
       <h2 className="text-white text-2xl font-bold mb-6">Cadastro de Membro</h2>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-md">
         <div className="mb-4">
@@ -84,8 +107,8 @@ const App = () => {
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
             placeholder='Fulano'
-            required
           />
+          {errors.nome && <p className="text-red-500 text-xs">{errors.nome}</p>}
         </div>
 
         <div className="mb-4">
@@ -98,8 +121,8 @@ const App = () => {
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
             placeholder='Fulano@gmail.com'
-            required
           />
+          {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
         </div>
 
         <div className="mb-4">
@@ -112,8 +135,8 @@ const App = () => {
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
             placeholder='2199999999999'
-            required
           />
+          {errors.telefone && <p className="text-red-500 text-xs">{errors.telefone}</p>}
         </div>
 
         <div className="mb-4">
@@ -133,6 +156,7 @@ const App = () => {
               </option>
             ))}
           </select>
+          {errors.cargo && <p className="text-red-500 text-xs">{errors.cargo}</p>}
         </div>
 
         <div className="mb-4">
@@ -145,6 +169,7 @@ const App = () => {
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
           />
+          {errors.linkedin && <p className="text-red-500 text-xs">{errors.linkedin}</p>}
         </div>
 
         <div className="mb-4">
@@ -157,6 +182,7 @@ const App = () => {
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
           />
+          {errors.github && <p className="text-red-500 text-xs">{errors.github}</p>}
         </div>
 
         <button
