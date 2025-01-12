@@ -21,14 +21,9 @@ const cargos = [
   'DevOps Engineer', 'Engenheiro de Dados', 'QA Engineer', 'Scrum Master', 'Product Owner',
 ];
 
-// Tipo para o estado de erros
+// Tipo para o estado de erros (agora permite acessar qualquer chave string)
 type FormErrors = {
-  nome?: string;
-  email?: string;
-  telefone?: string;
-  cargo?: string;
-  linkedin?: string;
-  github?: string;
+  [key: string]: string | undefined; // Aceita qualquer chave string com valor string ou undefined
 };
 
 const App = () => {
@@ -41,7 +36,7 @@ const App = () => {
     github: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>({}); // Tipagem para o estado de erros
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -76,7 +71,7 @@ const App = () => {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const formErrors: FormErrors = {}; // Usando o tipo FormErrors
+        const formErrors: FormErrors = {};
         error.errors.forEach((err) => {
           formErrors[err.path[0]] = err.message;
         });
