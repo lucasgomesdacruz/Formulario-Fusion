@@ -83,6 +83,8 @@ const App = () => {
             value={formData.nome}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
+            placeholder='Fulano'
+            required
           />
         </div>
 
@@ -95,6 +97,8 @@ const App = () => {
             value={formData.email}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
+            placeholder='Fulano@gmail.com'
+            required
           />
         </div>
 
@@ -107,6 +111,8 @@ const App = () => {
             value={formData.telefone}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hover:border-blue-500 hover:bg-gray-100 transition duration-200"
+            placeholder='2199999999999'
+            required
           />
         </div>
 
