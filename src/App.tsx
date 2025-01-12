@@ -21,9 +21,9 @@ const cargos = [
   'DevOps Engineer', 'Engenheiro de Dados', 'QA Engineer', 'Scrum Master', 'Product Owner',
 ];
 
-// Tipo para o estado de erros (agora permite acessar qualquer chave string)
+
 type FormErrors = {
-  [key: string]: string | undefined; // Aceita qualquer chave string com valor string ou undefined
+  [key: string]: string | undefined; 
 };
 
 const App = () => {
@@ -53,7 +53,6 @@ const App = () => {
     try {
       schema.parse(formData);
 
-      // Clear errors on successful validation
       setErrors({});
 
       localStorage.setItem('membro', JSON.stringify(formData));
